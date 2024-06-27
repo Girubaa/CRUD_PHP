@@ -65,32 +65,16 @@ while($result =mysqli_fetch_assoc($query)){
     
     
 if($_SERVER["REQUEST_METHOD"] == "POST"){
-    $username = filter_input(INPUT_POST,"username",FILTER_SANITIZE_SPECIAL_CHARS);
-    $email = filter_input(INPUT_POST,"email",FILTER_VALIDATE_EMAIL);
-    $age = filter_input(INPUT_POST,"age",FILTER_VALIDATE_INT);
+    $username = $_POST['username'];
+    $email = $_POST['email'];
+    $age = $age['age'];
     $id = $_SESSION['id'];
-
-    if(!empty($username) && !empty($email) && !empty($age) && !empty($password_hash))
-{
-    $verify_email = mysqli_query($conn,"SELECT email FROM user_tbl WHERE email='$email'");
-    $verify_username = mysqli_query($conn,"SELECT username FROM user_tbl WHERE username='$username'");
-
-    if(mysqli_num_rows($verify_email) !=0){
-        echo"<div class='message'><p>This email is already in use,Try with a new one</p></div>";
-
-    }else if(mysqli_num_rows($verify_username) !=0){
-        echo"<div class='message'><p>This username is already in use,Try with a new one</p></div>";
-
-    }else{
         try
         {
-            $updatequery = "UPDATE user_tbl SET username ='$username', email='$email', age= '$age' WHERE id='$id'";
+            $updatequery =  mysqli_query($conn,"UPDATE user_tbl SET username ='$username', email='$email', age= '$age' WHERE id='$id'");
             if($updatequery){
-                mysqli_query($conn,$updatequery);
-            mysqli_close($conn);
-    
-            echo"Profile Updated Successfully";
-            header("Location:home.php");
+                echo"Profile Updated Successfully";
+                header("Location:home.php");
             }
             else{
                 $id = $_SESSION['id'];
@@ -108,15 +92,8 @@ if($_SERVER["REQUEST_METHOD"] == "POST"){
         }
     
     }
-   
-}
-else
-{
-    echo"<div class='message'><p>Enter all the details to continue</p></div>";
 
-}
 
-}
 
 
 
